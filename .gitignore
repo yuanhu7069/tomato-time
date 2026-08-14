@@ -1,0 +1,20 @@
+# .NET build artifacts
+bin/
+obj/
+*.user
+
+# Test results
+TestResults/
+*.trx
+
+# IDE
+.vs/
+.idea/
+*.suo
+
+# scratch (local dev only)
+.scratch/
+
+# reasonix runtime
+.reasonix/
+
