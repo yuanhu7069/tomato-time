@@ -4,6 +4,7 @@
         xmlns:vm="clr-namespace:TomatoTime.ViewModels"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         Title="TomatoTime" Height="680" Width="480"
+        Icon="/Assets/app.ico"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BgGradient}">
   <Window.Resources>
