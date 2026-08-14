@@ -1,0 +1,22 @@
+<Window x:Class="TomatoTime.Views.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None" AllowsTransparency="True" Topmost="True"
+        ShowInTaskbar="False" ResizeMode="NoResize">
+  <Grid Background="#CC000000">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <TextBlock Text="{Binding EndedLabel}" Foreground="White" FontSize="44" FontWeight="Bold"
+                 HorizontalAlignment="Center"/>
+      <TextBlock Text="{Binding HintLabel}" Foreground="#bbb" FontSize="18" Margin="0,10"
+                 HorizontalAlignment="Center"/>
+      <TextBlock Text="{Binding NextLabel}" Foreground="#FFD75E" FontSize="24" Margin="0,2,0,26"
+                 HorizontalAlignment="Center"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <Button Content="开始下一段" Command="{Binding StartNextCommand}" Padding="26,12" Margin="10"
+                FontSize="16" Background="#D63630" Foreground="White" BorderThickness="0"/>
+        <Button Content="稍后 1 分" Command="{Binding PostponeCommand}" Padding="26,12" Margin="10"
+                FontSize="16"/>
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</Window>

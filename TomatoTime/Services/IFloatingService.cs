@@ -5,4 +5,7 @@ public interface IFloatingService
 {
     void Show();
     void Close();
+    double Left { get; set; }
+    double Top { get; set; }
+    bool IsVisible { get; }
 }

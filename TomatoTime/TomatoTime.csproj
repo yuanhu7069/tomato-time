@@ -24,4 +24,19 @@
     <InternalsVisibleTo Include="TomatoTime.Tests" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="Assets\app.ico" />
+    <Resource Include="Assets\bell.wav" />
+  </ItemGroup>
+
+  <!--
+    MSIX 打包预留(发布渠道接入后启用,当前默认关闭):
+    <PropertyGroup>
+      <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+      <PackageVersion>1.0.0</PackageVersion>
+      <Authors>TomatoTime</Authors>
+      <PackageId>TomatoTime</PackageId>
+    </PropertyGroup>
+  -->
+
 </Project>

@@ -1,9 +1,24 @@
 ﻿<Application x:Class="TomatoTime.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:TomatoTime"
-             StartupUri="MainWindow.xaml">
+             xmlns:tb="http://www.hardcodet.net/taskbar"
+             ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
-         
+        <tb:TaskbarIcon x:Key="TrayIcon"
+                        IconSource="/Assets/app.ico"
+                        ToolTipText="TomatoTime"
+                        TrayLeftMouseUp="OnTrayClick"
+                        TrayLeftMouseDoubleClick="OnTrayClick">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="开始" Click="MnuStart"/>
+                    <MenuItem Header="暂停" Click="MnuPause"/>
+                    <MenuItem Header="跳过" Click="MnuSkip"/>
+                    <MenuItem Header="设置" Click="MnuSettings"/>
+                    <Separator/>
+                    <MenuItem Header="退出" Click="MnuExit"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
     </Application.Resources>
 </Application>

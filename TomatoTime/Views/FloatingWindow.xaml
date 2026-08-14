@@ -1,0 +1,16 @@
+<Window x:Class="TomatoTime.Views.FloatingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="180" Height="54" WindowStyle="None" AllowsTransparency="True"
+        Background="#E6202020" Topmost="True" ShowInTaskbar="False"
+        ResizeMode="NoResize" MouseLeftButtonDown="OnDrag" MouseDoubleClick="OnDoubleClick">
+  <DockPanel>
+    <Button DockPanel.Dock="Right" Content="⤢" Width="26" Background="Transparent"
+            BorderThickness="0" Foreground="#ccc" Command="{Binding ExpandCommand}"
+            Margin="4" ToolTip="展开主窗" VerticalAlignment="Center"/>
+    <TextBlock Text="{Binding TaskTitle}" DockPanel.Dock="Right" Foreground="#9ab" FontSize="10"
+               VerticalAlignment="Center" Margin="6,0,2,0" TextTrimming="CharacterEllipsis"/>
+    <TextBlock Text="{Binding RemainingText}" Foreground="White" FontSize="20" FontWeight="Bold"
+               VerticalAlignment="Center" Margin="10,0,0,0"/>
+  </DockPanel>
+</Window>
