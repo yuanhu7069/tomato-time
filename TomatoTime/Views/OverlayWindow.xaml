@@ -3,20 +3,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStyle="None" AllowsTransparency="True" Topmost="True"
         ShowInTaskbar="False" ResizeMode="NoResize">
-  <Grid Background="#CC000000">
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-      <TextBlock Text="{Binding EndedLabel}" Foreground="White" FontSize="44" FontWeight="Bold"
-                 HorizontalAlignment="Center"/>
-      <TextBlock Text="{Binding HintLabel}" Foreground="#bbb" FontSize="18" Margin="0,10"
-                 HorizontalAlignment="Center"/>
-      <TextBlock Text="{Binding NextLabel}" Foreground="#FFD75E" FontSize="24" Margin="0,2,0,26"
-                 HorizontalAlignment="Center"/>
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-        <Button Content="开始下一段" Command="{Binding StartNextCommand}" Padding="26,12" Margin="10"
-                FontSize="16" Background="#D63630" Foreground="White" BorderThickness="0"/>
-        <Button Content="稍后 1 分" Command="{Binding PostponeCommand}" Padding="26,12" Margin="10"
-                FontSize="16"/>
+  <Grid Background="#E60B0F1A">
+    <Border Width="460" Padding="36,32" CornerRadius="16"
+            Background="#D9141B2E" BorderBrush="#88223052" BorderThickness="1"
+            HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Border.Effect>
+        <DropShadowEffect Color="#00E5FF" BlurRadius="40" ShadowDepth="0" Opacity="0.25"/>
+      </Border.Effect>
+      <StackPanel HorizontalAlignment="Center">
+        <TextBlock Text="{Binding EndedLabel}" Foreground="White" FontSize="40" FontWeight="Bold"
+                   HorizontalAlignment="Center">
+          <TextBlock.Effect>
+            <DropShadowEffect Color="#FF4D5E" BlurRadius="24" ShadowDepth="0" Opacity="0.7"/>
+          </TextBlock.Effect>
+        </TextBlock>
+        <TextBlock Text="{Binding HintLabel}" Foreground="#99AAB8CC" FontSize="16" Margin="0,12"
+                   HorizontalAlignment="Center"/>
+        <TextBlock Text="{Binding NextLabel}" Foreground="#00E5FF" FontSize="22" FontWeight="SemiBold"
+                   Margin="0,2,0,28" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+          <Button Content="开始下一段" Command="{Binding StartNextCommand}" Padding="30,13" Margin="10"
+                  FontSize="16" Style="{StaticResource AccentButton}"/>
+          <Button Content="稍后 1 分" Command="{Binding PostponeCommand}" Padding="30,13" Margin="10"
+                  FontSize="16" Style="{StaticResource GhostButton}"/>
+        </StackPanel>
       </StackPanel>
-    </StackPanel>
+    </Border>
   </Grid>
 </Window>

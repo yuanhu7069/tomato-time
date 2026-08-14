@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
+using H.NotifyIcon;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TomatoTime.Data;
@@ -15,6 +16,9 @@ public partial class App : Application
 {
     public static IServiceProvider Services { get; private set; } = null!;
 
+    /// <summary>持有托盘图标引用:App.xaml 资源是惰性实例化的,不引用则不创建托盘图标。</summary>
+    private TaskbarIcon? _trayIcon;
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -26,6 +30,9 @@ public partial class App : Application
             ex.Handled = true;
         };
         Services = ServiceConfiguration.Build();
+
+        // 强制实例化托盘图标并保持引用(防 GC),确保启动即可见
+        _trayIcon = TryFindResource("TrayIcon") as TaskbarIcon;
 
         MigrateDatabase();
 

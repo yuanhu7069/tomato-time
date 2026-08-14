@@ -90,14 +90,15 @@ public class StatsServiceTests
     public async Task GetHourlyBucketsAsync_BucketsByLocalHour()
     {
         var db = TestDb.Create();
-        var now = DateTime.UtcNow;
-        var hour = now.ToLocalTime().Hour;
-        db.WorkSessions.Add(new() { TaskId = null, StartedAt = now.AddMinutes(-25), EndedAt = now, DurationSeconds = 25 * 60 });
-        db.WorkSessions.Add(new() { TaskId = null, StartedAt = now.AddMinutes(-50), EndedAt = now.AddMinutes(-25), DurationSeconds = 25 * 60 });
+        // 固定本地时间:两个完成的番茄 EndedAt 均落在 10 点这一小时桶
+        var ended1 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 40, 0, DateTimeKind.Local).ToUniversalTime();
+        var ended2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 20, 0, DateTimeKind.Local).ToUniversalTime();
+        db.WorkSessions.Add(new() { TaskId = null, StartedAt = ended1.AddMinutes(-25), EndedAt = ended1, DurationSeconds = 25 * 60 });
+        db.WorkSessions.Add(new() { TaskId = null, StartedAt = ended2.AddMinutes(-25), EndedAt = ended2, DurationSeconds = 25 * 60 });
         db.SaveChanges();
         var svc = new StatsService(db);
         var buckets = await svc.GetHourlyBucketsAsync(DateTime.Today);
         Assert.Equal(24, buckets.Length);
-        Assert.Equal(2, buckets[hour]);
+        Assert.Equal(2, buckets[10]);
     }
 }

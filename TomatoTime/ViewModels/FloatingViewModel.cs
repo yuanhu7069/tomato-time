@@ -46,4 +46,10 @@ public partial class FloatingViewModel : ObservableObject
     {
         App.Services.GetRequiredService<IWindowService>().ShowMain();
     }
+
+    [RelayCommand]
+    private void Exit()
+    {
+        App.Services.GetRequiredService<IWindowService>().OnExit();
+    }
 }

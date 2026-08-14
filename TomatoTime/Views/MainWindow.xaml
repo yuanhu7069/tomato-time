@@ -3,14 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:TomatoTime.ViewModels"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-        Title="TomatoTime" Height="660" Width="480"
-        WindowStartupLocation="CenterScreen">
+        Title="TomatoTime" Height="680" Width="480"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BgGradient}">
   <Window.Resources>
     <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
     <!-- 统计页 DataTemplate -->
     <DataTemplate DataType="{x:Type vm:StatsViewModel}">
-      <Grid>
+      <Grid Margin="8">
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto"/>
           <RowDefinition Height="Auto"/>
@@ -18,33 +19,37 @@
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="6,4">
-          <Button Content="◀" Command="{Binding PrevCommand}" Padding="8,2" Margin="0,0,4,0"/>
-          <Button Content="日" Command="{Binding SetRangeCommand}" CommandParameter="{x:Static vm:StatsRange.Day}" Margin="0,0,4,0" Padding="10,2"/>
-          <Button Content="周" Command="{Binding SetRangeCommand}" CommandParameter="{x:Static vm:StatsRange.Week}" Margin="0,0,4,0" Padding="10,2"/>
-          <Button Content="月" Command="{Binding SetRangeCommand}" CommandParameter="{x:Static vm:StatsRange.Month}" Margin="0,0,4,0" Padding="10,2"/>
-          <Button Content="▶" Command="{Binding NextCommand}" Padding="8,2" Margin="0,0,8,0"/>
-          <TextBlock Text="{Binding ViewTitle}" VerticalAlignment="Center" Opacity="0.7"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="2,2">
+          <Button Content="◀" Command="{Binding PrevCommand}" Padding="10,3" Margin="0,0,6,0"/>
+          <Button Content="日" Command="{Binding SetRangeCommand}" CommandParameter="{x:Static vm:StatsRange.Day}" Margin="0,0,4,0" Padding="12,3" Style="{StaticResource GhostButton}"/>
+          <Button Content="周" Command="{Binding SetRangeCommand}" CommandParameter="{x:Static vm:StatsRange.Week}" Margin="0,0,4,0" Padding="12,3" Style="{StaticResource GhostButton}"/>
+          <Button Content="月" Command="{Binding SetRangeCommand}" CommandParameter="{x:Static vm:StatsRange.Month}" Margin="0,0,4,0" Padding="12,3" Style="{StaticResource GhostButton}"/>
+          <Button Content="▶" Command="{Binding NextCommand}" Padding="10,3" Margin="0,0,10,0"/>
+          <TextBlock Text="{Binding ViewTitle}" VerticalAlignment="Center" Foreground="{StaticResource DimTextBrush}" FontSize="12"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="8,2" TextElement.FontSize="16">
-          <TextBlock Text="{Binding PomodoroKpi}" FontWeight="Bold" Foreground="#D63630"/>
-          <TextBlock Text=" 番茄" VerticalAlignment="Bottom" Margin="0,0,14,0" Opacity="0.8"/>
-          <TextBlock Text="{Binding DurationKpi}" FontWeight="Bold"/>
-          <TextBlock Text=" 时长" VerticalAlignment="Bottom" Margin="0,0,14,0" Opacity="0.8"/>
-          <TextBlock Text="{Binding DailyAvgKpi}" VerticalAlignment="Bottom" Margin="0,0,14,0" Opacity="0.8"/>
-          <TextBlock Text="{Binding ExtraKpi}" VerticalAlignment="Bottom" Opacity="0.8"/>
-        </StackPanel>
+        <Border Grid.Row="1" Margin="2,4" Padding="10,8" CornerRadius="8"
+                Background="#101729" BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="1">
+          <StackPanel Orientation="Horizontal" TextElement.FontSize="15">
+            <TextBlock Text="{Binding PomodoroKpi}" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" FontFamily="Consolas"/>
+            <TextBlock Text=" 番茄" VerticalAlignment="Bottom" Margin="0,0,14,0" Foreground="{StaticResource DimTextBrush}" FontSize="12"/>
+            <TextBlock Text="{Binding DurationKpi}" FontWeight="Bold" FontFamily="Consolas"/>
+            <TextBlock Text=" 时长" VerticalAlignment="Bottom" Margin="0,0,14,0" Foreground="{StaticResource DimTextBrush}" FontSize="12"/>
+            <TextBlock Text="{Binding DailyAvgKpi}" VerticalAlignment="Bottom" Margin="0,0,14,0" Foreground="{StaticResource DimTextBrush}" FontSize="12"/>
+            <TextBlock Text="{Binding ExtraKpi}" VerticalAlignment="Bottom" Foreground="{StaticResource CyanBrush}" FontSize="12"/>
+          </StackPanel>
+        </Border>
 
-        <Grid Grid.Row="2" Margin="6">
+        <Grid Grid.Row="2" Margin="2,6">
           <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" TooltipPosition="Hidden"/>
-          <TextBlock Text="今天还没有完成番茄" Opacity="0.5" HorizontalAlignment="Center" VerticalAlignment="Center"
+          <TextBlock Text="今天还没有完成番茄" Foreground="{StaticResource DimTextBrush}"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
                      Visibility="{Binding Series[0].Values.Count, Converter={x:Static vm:EmptyToCollapsedConverter.Instance}, FallbackValue=Collapsed}"/>
         </Grid>
 
-        <GroupBox Grid.Row="3" Header="按任务分布" Margin="6,0,6,6">
-          <DataGrid ItemsSource="{Binding BreakdownRows}" AutoGenerateColumns="True" IsReadOnly="True"
-                    HeadersVisibility="Column" GridLinesVisibility="Horizontal" CanUserAddRows="False"/>
+        <GroupBox Grid.Row="3" Header="按任务分布" Margin="2,4,2,2"
+                  Foreground="{StaticResource CyanBrush}" BorderBrush="{StaticResource ControlBorderBrush}">
+          <DataGrid ItemsSource="{Binding BreakdownRows}" AutoGenerateColumns="True" IsReadOnly="True"/>
         </GroupBox>
       </Grid>
     </DataTemplate>
@@ -57,95 +62,120 @@
     </Grid.RowDefinitions>
 
     <!-- 顶部计时视图 -->
-    <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,18,0,10">
-      <TextBlock Text="{Binding PhaseLabel}" FontSize="16" HorizontalAlignment="Center" Opacity="0.7"/>
-      <TextBlock Text="{Binding RemainingText}" FontSize="64" FontWeight="Bold" HorizontalAlignment="Center"/>
-      <TextBlock Text="{Binding CurrentTaskTitle}" FontSize="13" HorizontalAlignment="Center" Margin="0,2,0,10" Opacity="0.8"/>
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-        <Button Content="开始" Command="{Binding StartCommand}" Padding="16,6" Margin="4"
-                Visibility="{Binding IsIdle, Converter={StaticResource BoolToVis}}"/>
-        <Button Content="暂停" Command="{Binding PauseCommand}" Padding="16,6" Margin="4"
-                Visibility="{Binding CanPause, Converter={StaticResource BoolToVis}}"/>
-        <Button Content="继续" Command="{Binding ResumeCommand}" Padding="16,6" Margin="4"
-                Visibility="{Binding IsPaused, Converter={StaticResource BoolToVis}}"/>
-        <Button Content="跳过" Command="{Binding SkipCommand}" Padding="16,6" Margin="4"
-                IsEnabled="{Binding CanControl}"/>
-        <Button Content="停止" Command="{Binding StopCommand}" Padding="16,6" Margin="4"
-                IsEnabled="{Binding CanControl}"/>
+    <Border Grid.Row="0" Margin="12,14,12,8" Padding="0,14" CornerRadius="12"
+            Background="#101729" BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="1">
+      <StackPanel HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+          <Ellipse Width="8" Height="8" Fill="{StaticResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+          <TextBlock Text="{Binding PhaseLabel}" FontSize="15" Foreground="{StaticResource CyanBrush}"
+                     FontWeight="SemiBold"/>
+        </StackPanel>
+        <TextBlock Text="{Binding RemainingText}" FontSize="64" FontWeight="Bold" HorizontalAlignment="Center"
+                   FontFamily="Consolas" Foreground="{StaticResource AccentBrush}" Margin="0,6,0,0">
+          <TextBlock.Effect>
+            <DropShadowEffect Color="#FF4D5E" BlurRadius="16" ShadowDepth="0" Opacity="0.55"/>
+          </TextBlock.Effect>
+        </TextBlock>
+        <TextBlock Text="{Binding CurrentTaskTitle}" FontSize="13" HorizontalAlignment="Center" Margin="0,4,0,10"
+                   Foreground="{StaticResource DimTextBrush}" TextTrimming="CharacterEllipsis"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+          <Button Content="开 始" Command="{Binding StartCommand}" Padding="20,7" Margin="4" Style="{StaticResource AccentButton}"
+                  Visibility="{Binding IsIdle, Converter={StaticResource BoolToVis}}"/>
+          <Button Content="暂停" Command="{Binding PauseCommand}" Padding="18,7" Margin="4"
+                  Visibility="{Binding CanPause, Converter={StaticResource BoolToVis}}"/>
+          <Button Content="继续" Command="{Binding ResumeCommand}" Padding="18,7" Margin="4"
+                  Style="{StaticResource AccentButton}"
+                  Visibility="{Binding IsPaused, Converter={StaticResource BoolToVis}}"/>
+          <Button Content="跳过" Command="{Binding SkipCommand}" Padding="18,7" Margin="4" Style="{StaticResource GhostButton}"
+                  IsEnabled="{Binding CanControl}"/>
+          <Button Content="停止" Command="{Binding StopCommand}" Padding="18,7" Margin="4" Style="{StaticResource GhostButton}"
+                  IsEnabled="{Binding CanControl}"/>
+        </StackPanel>
       </StackPanel>
-    </StackPanel>
+    </Border>
 
     <!-- Tab 区:今日待办 | 统计 | 设置 -->
-    <TabControl Grid.Row="1" Margin="10,0,10,10">
+    <TabControl Grid.Row="1" Margin="12,4,12,12">
       <TabItem Header="今日待办">
-        <Grid Margin="6">
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-          </Grid.RowDefinitions>
+        <Border Margin="0,8,0,0" Padding="12" CornerRadius="10"
+                Background="#101729" BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="1">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-          <TextBlock Text="今日待办" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,6"/>
+            <TextBlock Text="今日待办" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,8"
+                       Foreground="{StaticResource TextBrush}" FontSize="15"/>
 
-          <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-              <TextBlock Text="今日没有任务,加一个开始专注" Opacity="0.5" HorizontalAlignment="Center" Margin="0,16">
-                <TextBlock.Style>
-                  <Style TargetType="TextBlock">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                      <DataTrigger Binding="{Binding Tasks.Pending.Count}" Value="0">
-                        <Setter Property="Visibility" Value="Visible"/>
-                      </DataTrigger>
-                    </Style.Triggers>
-                  </Style>
-                </TextBlock.Style>
-              </TextBlock>
-              <ItemsControl ItemsSource="{Binding Tasks.Pending}">
-                <ItemsControl.ItemTemplate>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+              <StackPanel>
+                <TextBlock Text="今日没有任务,加一个开始专注" Foreground="{StaticResource DimTextBrush}"
+                           HorizontalAlignment="Center" Margin="0,16">
+                  <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                      <Setter Property="Visibility" Value="Collapsed"/>
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding Tasks.Pending.Count}" Value="0">
+                          <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+                <ItemsControl ItemsSource="{Binding Tasks.Pending}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <DockPanel Margin="0,4" Background="Transparent">
+                        <Button Content="✕" DockPanel.Dock="Right" Width="24" Height="24" ToolTip="删除"
+                                Command="{Binding DataContext.Tasks.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" Background="Transparent" BorderThickness="0"
+                                Foreground="{StaticResource DimTextBrush}" FontSize="12"/>
+                        <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,8,0"
+                                   Foreground="{StaticResource DimTextBrush}" FontSize="12"
+                                   Text="{Binding TodayPomodoros, StringFormat='🍅 {0}'}"/>
+                        <CheckBox VerticalAlignment="Center" ToolTip="设为当前任务"
+                                  IsChecked="{Binding IsActive}"
+                                  Command="{Binding DataContext.Tasks.ActivateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  CommandParameter="{Binding}">
+                          <TextBlock Text="{Binding Title}" Margin="6,0" TextTrimming="CharacterEllipsis"
+                                     Foreground="{StaticResource TextBrush}"/>
+                        </CheckBox>
+                      </DockPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </ScrollViewer>
+
+            <DockPanel Grid.Row="2" Margin="0,10,0,0">
+              <Button Content="添加" DockPanel.Dock="Right" Command="{Binding Tasks.AddCommand}" Margin="8,0,0,0" Padding="16,5"/>
+              <TextBox Text="{Binding Tasks.NewTaskTitle, UpdateSourceTrigger=PropertyChanged}"
+                       KeyDown="NewTask_KeyDown"/>
+            </DockPanel>
+
+            <Expander Grid.Row="3" Margin="0,10,0,0" IsExpanded="{Binding Tasks.ShowCompleted}"
+                      Foreground="{StaticResource TextBrush}"
+                      Header="{Binding Tasks.CompletedCount, StringFormat='今日已完成 ({0})'}">
+              <ListBox ItemsSource="{Binding Tasks.Completed}" MaxHeight="140" Background="Transparent"
+                       BorderThickness="0" Foreground="{StaticResource TextBrush}">
+                <ListBox.ItemTemplate>
                   <DataTemplate>
                     <DockPanel Margin="0,3">
-                      <Button Content="✕" DockPanel.Dock="Right" Width="22" ToolTip="删除"
-                              Command="{Binding DataContext.Tasks.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                              CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Foreground="#999"/>
-                      <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,6,0" Opacity="0.6"
+                      <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource DimTextBrush}" Margin="10,0,4,0"
+                                 FontSize="12"
                                  Text="{Binding TodayPomodoros, StringFormat='🍅 {0}'}"/>
-                      <CheckBox VerticalAlignment="Center" ToolTip="设为当前任务"
-                                IsChecked="{Binding IsActive}"
-                                Command="{Binding DataContext.Tasks.ActivateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                CommandParameter="{Binding}">
-                        <TextBlock Text="{Binding Title}" Margin="6,0" TextTrimming="CharacterEllipsis"/>
-                      </CheckBox>
+                      <TextBlock Text="{Binding Title}" TextDecorations="Strikethrough"
+                                 Foreground="{StaticResource DimTextBrush}" TextTrimming="CharacterEllipsis"/>
                     </DockPanel>
                   </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </StackPanel>
-          </ScrollViewer>
-
-          <DockPanel Grid.Row="2" Margin="0,8,0,0">
-            <Button Content="添加" DockPanel.Dock="Right" Command="{Binding Tasks.AddCommand}" Margin="6,0,0,0" Padding="12,4"/>
-            <TextBox Text="{Binding Tasks.NewTaskTitle, UpdateSourceTrigger=PropertyChanged}"
-                     KeyDown="NewTask_KeyDown" Padding="4,3"/>
-          </DockPanel>
-
-          <Expander Grid.Row="3" Margin="0,8,0,0" IsExpanded="{Binding Tasks.ShowCompleted}"
-                    Header="{Binding Tasks.CompletedCount, StringFormat='今日已完成 ({0})'}">
-            <ListBox ItemsSource="{Binding Tasks.Completed}" MaxHeight="140">
-              <ListBox.ItemTemplate>
-                <DataTemplate>
-                  <DockPanel Margin="0,2">
-                    <TextBlock DockPanel.Dock="Right" Opacity="0.6" Margin="10,0,4,0"
-                               Text="{Binding TodayPomodoros, StringFormat='🍅 {0}'}"/>
-                    <TextBlock Text="{Binding Title}" TextDecorations="Strikethrough" Opacity="0.7"
-                               TextTrimming="CharacterEllipsis"/>
-                  </DockPanel>
-                </DataTemplate>
-              </ListBox.ItemTemplate>
-            </ListBox>
-          </Expander>
-        </Grid>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Expander>
+          </Grid>
+        </Border>
       </TabItem>
 
       <TabItem Header="统计">
@@ -153,10 +183,14 @@
       </TabItem>
 
       <TabItem Header="设置">
-        <StackPanel Margin="20" VerticalAlignment="Top">
-          <TextBlock Text="常规设置请打开设置窗口调整。" Opacity="0.7" Margin="0,0,0,12"/>
-          <Button Content="打开设置窗口…" Command="{Binding OpenSettingsCommand}" Padding="16,8" HorizontalAlignment="Left"/>
-        </StackPanel>
+        <Border Margin="0,8,0,0" Padding="20" CornerRadius="10" VerticalAlignment="Top"
+                Background="#101729" BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="1">
+          <StackPanel>
+            <TextBlock Text="常规设置请打开设置窗口调整。" Foreground="{StaticResource DimTextBrush}" Margin="0,0,0,14"/>
+            <Button Content="打开设置窗口…" Command="{Binding OpenSettingsCommand}" Padding="18,9"
+                    HorizontalAlignment="Left" Style="{StaticResource AccentButton}"/>
+          </StackPanel>
+        </Border>
       </TabItem>
     </TabControl>
   </Grid>
