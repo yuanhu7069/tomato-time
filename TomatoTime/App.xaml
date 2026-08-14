@@ -170,22 +170,63 @@
             <Setter Property="Foreground" Value="{StaticResource CyanBrush}"/>
         </Style>
 
-        <!-- ============ 菜单(托盘/右键) ============ -->
+        <!-- ============ 菜单(托盘/悬浮窗右键):完整深色模板 ============ -->
         <Style TargetType="ContextMenu">
             <Setter Property="Background" Value="#141B2D"/>
-            <Setter Property="BorderBrush" Value="#2E3D5C"/>
             <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="#2E3D5C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6" Padding="4">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#000000" BlurRadius="14" ShadowDepth="2" Opacity="0.55"/>
+                            </Border.Effect>
+                            <ItemsPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style TargetType="MenuItem">
             <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-            <Setter Property="Background" Value="#141B2D"/>
-            <Style.Triggers>
-                <Trigger Property="IsHighlighted" Value="True">
-                    <Setter Property="Background" Value="{StaticResource CyanDimBrush}"/>
-                    <Setter Property="Foreground" Value="White"/>
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="bd" CornerRadius="4" Background="Transparent"
+                                Padding="12,7" Margin="0,1">
+                            <ContentPresenter ContentSource="Header" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#233052"/>
+                                <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource CyanDimBrush}"/>
+                                <Setter TargetName="bd" Property="BorderThickness" Value="1"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#4A5A70"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Separator">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Separator">
+                        <Rectangle Height="1" Margin="10,4" Fill="#2E3D5C"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- ============ 提示 ============ -->
