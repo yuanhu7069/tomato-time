@@ -17,6 +17,18 @@ public partial class TasksViewModel : ObservableObject
     [ObservableProperty] private int completedCount;
     [ObservableProperty] private string newTaskTitle = "";
 
+    /// <summary>新增任务的时长选项(分钟)。</summary>
+    public List<int> LengthOptions { get; } = new() { 25, 30, 45, 60 };
+
+    /// <summary>新增任务选择的每番茄时长(分钟)。</summary>
+    [ObservableProperty] private int selectedLength = 25;
+
+    /// <summary>新增任务选择的计划番茄数(默认 1)。</summary>
+    [ObservableProperty] private string plannedPomodorosText = "1";
+
+    /// <summary>当前新增任务解析出的计划番茄数(非法输入回落 1)。</summary>
+    public int PlannedPomodoros => int.TryParse(PlannedPomodorosText, out var n) && n >= 1 ? n : 1;
+
     public ObservableCollection<TaskRow> Pending { get; } = new();
     public ObservableCollection<TaskRow> Completed { get; } = new();
 
@@ -36,16 +48,27 @@ public partial class TasksViewModel : ObservableObject
         public int Id { get; }
         public int TodayPomodoros { get; }
         public bool IsActive { get; }
+        /// <summary>计划番茄数(>1 时显示计划进度)。</summary>
+        public int PlannedPomodoros { get; }
+        /// <summary>每番茄时长(分钟,用于显示)。</summary>
+        public int? LengthMinutes { get; }
+
+        /// <summary>番茄进度文本(如今天完成了 2/4 计划)。</summary>
+        public string PomodoroText => PlannedPomodoros > 1
+            ? $"{TodayPomodoros}/{PlannedPomodoros}"
+            : TodayPomodoros.ToString();
 
         [ObservableProperty] private string title;
         [ObservableProperty] private bool isEditing;
 
-        public TaskRow(int id, string title, int todayPomodoros, bool isActive)
+        public TaskRow(int id, string title, int todayPomodoros, bool isActive, int plannedPomodoros, int? lengthMinutes)
         {
             Id = id;
             Title = title;
             TodayPomodoros = todayPomodoros;
             IsActive = isActive;
+            PlannedPomodoros = plannedPomodoros;
+            LengthMinutes = lengthMinutes;
         }
     }
     public async Task RefreshAsync()
@@ -58,10 +81,12 @@ public partial class TasksViewModel : ObservableObject
         {
             Pending.Clear();
             foreach (var t in pending)
-                Pending.Add(new TaskRow(t.Id, t.Title, counts.GetValueOrDefault(t.Id), t.IsActive));
+                Pending.Add(new TaskRow(t.Id, t.Title, counts.GetValueOrDefault(t.Id), t.IsActive,
+                    t.PlannedPomodoros, t.PomodoroLengthMinutes));
             Completed.Clear();
             foreach (var t in done)
-                Completed.Add(new TaskRow(t.Id, t.Title, counts.GetValueOrDefault(t.Id), t.IsActive));
+                Completed.Add(new TaskRow(t.Id, t.Title, counts.GetValueOrDefault(t.Id), t.IsActive,
+                    t.PlannedPomodoros, t.PomodoroLengthMinutes));
             CompletedCount = Completed.Count;
             TasksChanged?.Invoke();
         });
@@ -71,7 +96,7 @@ public partial class TasksViewModel : ObservableObject
     private async Task Add()
     {
         if (string.IsNullOrWhiteSpace(NewTaskTitle)) return;
-        await _svc.CreateAsync(NewTaskTitle);
+        await _svc.CreateAsync(NewTaskTitle, SelectedLength, PlannedPomodoros);
         NewTaskTitle = "";
         await RefreshAsync();
     }

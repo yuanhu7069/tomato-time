@@ -12,9 +12,19 @@ public class TaskService : ITaskService
     public TaskService(TomatoTimeDbContext db) => _db = db;
 
     public async Task<TaskEntity> CreateAsync(string title)
+        => await CreateAsync(title, null, 1);
+
+    public async Task<TaskEntity> CreateAsync(string title, int? pomodoroLengthMinutes, int plannedPomodoros)
     {
         var maxOrder = _db.Tasks.Any() ? await _db.Tasks.MaxAsync(x => x.Order) : 0;
-        var t = new TaskEntity { Title = title, CreatedAt = DateTime.UtcNow, Order = maxOrder + 1 };
+        var t = new TaskEntity
+        {
+            Title = title,
+            CreatedAt = DateTime.UtcNow,
+            Order = maxOrder + 1,
+            PomodoroLengthMinutes = pomodoroLengthMinutes,
+            PlannedPomodoros = Math.Max(1, plannedPomodoros)
+        };
         _db.Tasks.Add(t);
         await _db.SaveChangesAsync();
         return t;
@@ -52,6 +62,10 @@ public class TaskService : ITaskService
 
     public async Task<TaskEntity?> GetActiveAsync() =>
         await _db.Tasks.FirstOrDefaultAsync(x => x.IsActive);
+
+    /// <summary>同步读取激活任务的每番茄时长;无激活任务或未指定时返回 null(跟随全局)。</summary>
+    public int? GetActivePomodoroLengthMinutes() =>
+        _db.Tasks.AsNoTracking().FirstOrDefault(x => x.IsActive)?.PomodoroLengthMinutes;
 
     /// <summary>TimerService 通过此接口绑定当前任务(实际状态记录在 TimerState.ActiveTaskId)。</summary>
     public void SetActiveTaskId(int? taskId) { }

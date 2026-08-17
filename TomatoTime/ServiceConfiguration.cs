@@ -19,8 +19,10 @@ public static class ServiceConfiguration
             ServiceLifetime.Singleton);
 
         services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<ITimerService, TimerService>();
         services.AddSingleton<ITaskService, TaskService>();
+        services.AddSingleton<ITimerService>(sp => new TimerService(
+            sp.GetRequiredService<ISettingsService>(),
+            () => sp.GetRequiredService<ITaskService>().GetActivePomodoroLengthMinutes()));
         services.AddSingleton<IStatsService, StatsService>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IOverlayService, OverlayService>();

@@ -28,6 +28,14 @@ public class TimerServiceTests
     }
 
     [Fact]
+    public void Start_UsesActiveTaskLength_WhenProvided()
+    {
+        var t = new TimerService(new FakeSettings(), () => 45); // 激活任务指定 45 分钟
+        t.Start();
+        Assert.Equal(45 * 60, t.State.RemainingSeconds);
+    }
+
+    [Fact]
     public void WorkPhaseReachingZero_RaisesPhaseEnded_IncrementsPomodoros_EntersWaiting()
     {
         var t = Create();

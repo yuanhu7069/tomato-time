@@ -10,6 +10,7 @@ namespace TomatoTime.Services;
 public class TimerService : ITimerService
 {
     private readonly ISettingsService _settings;
+    private readonly Func<int?> _activeLengthProvider;
     private Timer? _ticker;
     private int _postponeRemaining;
 
@@ -20,7 +21,11 @@ public class TimerService : ITimerService
     public event EventHandler? Tick;
     public event EventHandler? Skipped;
 
-    public TimerService(ISettingsService settings) => _settings = settings;
+    public TimerService(ISettingsService settings, Func<int?>? activeLengthProvider = null)
+    {
+        _settings = settings;
+        _activeLengthProvider = activeLengthProvider ?? (() => null);
+    }
 
     // ---------- 测试钩子:同步走一次 Tick,避免真实定时器不确定性 ----------
     internal void TickOnce()
@@ -117,7 +122,10 @@ public class TimerService : ITimerService
     private void BeginPhase(PhaseKind phase)
     {
         State.Phase = phase;
-        State.RemainingSeconds = PhaseDuration(phase) * 60;
+        var minutes = phase == PhaseKind.Work
+            ? _activeLengthProvider() ?? _settings.WorkMinutes // 激活任务指定时长优先,否则全局
+            : PhaseDuration(phase);
+        State.RemainingSeconds = minutes * 60;
         State.Status = phase == PhaseKind.Work ? TimerStatus.Working : TimerStatus.Break;
         State.PhaseStartedAt = phase == PhaseKind.Work ? DateTime.UtcNow : null;
         StartTimer();

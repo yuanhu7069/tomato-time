@@ -15,6 +15,29 @@ public class TaskServiceTests
         Assert.Equal("写文档", t.Title);
         Assert.False(t.IsActive);
         Assert.Null(t.CompletedAt);
+        Assert.Equal(1, t.PlannedPomodoros);
+        Assert.Null(t.PomodoroLengthMinutes);
+    }
+
+    [Fact]
+    public async Task CreateAsync_WithLengthAndPlanned_SetsFields()
+    {
+        var svc = Create();
+        var t = await svc.CreateAsync("写代码", 45, 3);
+        Assert.Equal(45, t.PomodoroLengthMinutes);
+        Assert.Equal(3, t.PlannedPomodoros);
+    }
+
+    [Fact]
+    public async Task GetActivePomodoroLengthMinutes_ReturnsActiveTask()
+    {
+        var svc = Create();
+        var a = await svc.CreateAsync("A", 30, 2);
+        var b = await svc.CreateAsync("B");
+        await svc.ActivateAsync(a.Id);
+        Assert.Equal(30, svc.GetActivePomodoroLengthMinutes());
+        await svc.ActivateAsync(b.Id);
+        Assert.Null(svc.GetActivePomodoroLengthMinutes()); // B 未指定时长 → null
     }
 
     [Fact]

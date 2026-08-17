@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TomatoTime.Data;
 
@@ -10,9 +11,11 @@ using TomatoTime.Data;
 namespace TomatoTime.Migrations
 {
     [DbContext(typeof(TomatoTimeDbContext))]
-    partial class TomatoTimeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260817134201_TaskPlannedPomodoros")]
+    partial class TaskPlannedPomodoros
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
