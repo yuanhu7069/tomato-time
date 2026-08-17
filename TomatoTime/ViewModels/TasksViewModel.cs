@@ -30,8 +30,24 @@ public partial class TasksViewModel : ObservableObject
         _ = RefreshAsync();
     }
 
-    public record TaskRow(int Id, string Title, int TodayPomodoros, bool IsActive);
+    /// <summary>待办行模型:支持行内编辑(IsEditing 切换标题输入框)与标题变更通知。</summary>
+    public partial class TaskRow : ObservableObject
+    {
+        public int Id { get; }
+        public int TodayPomodoros { get; }
+        public bool IsActive { get; }
 
+        [ObservableProperty] private string title;
+        [ObservableProperty] private bool isEditing;
+
+        public TaskRow(int id, string title, int todayPomodoros, bool isActive)
+        {
+            Id = id;
+            Title = title;
+            TodayPomodoros = todayPomodoros;
+            IsActive = isActive;
+        }
+    }
     public async Task RefreshAsync()
     {
         if (DateTime.Today != _lastRefreshDate) _lastRefreshDate = DateTime.Today;
@@ -80,4 +96,24 @@ public partial class TasksViewModel : ObservableObject
         await _svc.DeleteAsync(row.Id);
         await RefreshAsync();
     }
+
+    [RelayCommand]
+    private void BeginEdit(TaskRow row) => row.IsEditing = true;
+
+    [RelayCommand]
+    private async Task SaveEdit(TaskRow row)
+    {
+        var t = row.Title?.Trim();
+        if (string.IsNullOrWhiteSpace(t))
+        {
+            row.IsEditing = false;
+            return;
+        }
+        if (t != row.Title) await _svc.UpdateTitleAsync(row.Id, t);
+        row.IsEditing = false;
+        await RefreshAsync();
+    }
+
+    [RelayCommand]
+    private void CancelEdit(TaskRow row) => row.IsEditing = false;
 }

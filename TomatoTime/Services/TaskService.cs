@@ -22,6 +22,13 @@ public class TaskService : ITaskService
 
     public async Task<List<TaskEntity>> GetAllAsync() => await _db.Tasks.ToListAsync();
 
+    public async Task UpdateTitleAsync(int taskId, string newTitle)
+    {
+        var t = await _db.Tasks.FindAsync(taskId) ?? throw new InvalidOperationException("任务不存在");
+        t.Title = newTitle;
+        await _db.SaveChangesAsync();
+    }
+
     public async Task DeleteAsync(int taskId)
     {
         var t = await _db.Tasks.FindAsync(taskId);
@@ -59,9 +66,13 @@ public class TaskService : ITaskService
     private static DateTime TodayLocalStart => DateTime.Now.Date;
     private static DateTime TodayLocalEnd => TodayLocalStart.AddDays(1);
 
-    public async Task<List<TaskEntity>> GetTodayPendingAsync() =>
-        await _db.Tasks.Where(x => x.CompletedAt == null)
+    public async Task<List<TaskEntity>> GetTodayPendingAsync()
+    {
+        // 今日待办只显示"今天创建"的未完成任务,昨天的待办不自动带入今天(跨天清零)
+        var startUtc = TodayLocalStart.ToUniversalTime();
+        return await _db.Tasks.Where(x => x.CompletedAt == null && x.CreatedAt >= startUtc)
                        .OrderBy(x => x.Order).ThenBy(x => x.CreatedAt).ToListAsync();
+    }
 
     public async Task<List<TaskEntity>> GetTodayCompletedAsync()
     {

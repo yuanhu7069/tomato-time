@@ -138,20 +138,113 @@
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
                       <DockPanel Margin="0,4" Background="Transparent">
+                        <!-- 删除(非编辑态) -->
                         <Button Content="✕" DockPanel.Dock="Right" Width="24" Height="24" ToolTip="删除"
                                 Command="{Binding DataContext.Tasks.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                 CommandParameter="{Binding}" Background="Transparent" BorderThickness="0"
-                                Foreground="{StaticResource DimTextBrush}" FontSize="12"/>
+                                Foreground="{StaticResource DimTextBrush}" FontSize="12">
+                          <Button.Style>
+                            <Style TargetType="Button">
+                              <Setter Property="Visibility" Value="Visible"/>
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                  <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </Button.Style>
+                        </Button>
+                        <!-- 编辑 ✎(非编辑态) -->
+                        <Button Content="✎" DockPanel.Dock="Right" Width="24" Height="24" ToolTip="编辑任务"
+                                Command="{Binding DataContext.Tasks.BeginEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" Background="Transparent" BorderThickness="0"
+                                Foreground="{StaticResource DimTextBrush}" FontSize="12">
+                          <Button.Style>
+                            <Style TargetType="Button">
+                              <Setter Property="Visibility" Value="Visible"/>
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                  <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </Button.Style>
+                        </Button>
+                        <!-- 保存 ✓(编辑态) -->
+                        <Button Content="✓" DockPanel.Dock="Right" Width="24" Height="24" ToolTip="保存修改"
+                                Command="{Binding DataContext.Tasks.SaveEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" Background="Transparent" BorderThickness="0"
+                                Foreground="{StaticResource CyanBrush}" FontSize="12">
+                          <Button.Style>
+                            <Style TargetType="Button">
+                              <Setter Property="Visibility" Value="Collapsed"/>
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                  <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </Button.Style>
+                        </Button>
+                        <!-- 取消 ✗(编辑态) -->
+                        <Button Content="✗" DockPanel.Dock="Right" Width="24" Height="24" ToolTip="取消编辑"
+                                Command="{Binding DataContext.Tasks.CancelEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" Background="Transparent" BorderThickness="0"
+                                Foreground="{StaticResource DimTextBrush}" FontSize="12">
+                          <Button.Style>
+                            <Style TargetType="Button">
+                              <Setter Property="Visibility" Value="Collapsed"/>
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                  <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </Button.Style>
+                        </Button>
+                        <!-- 番茄数 -->
                         <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,8,0"
                                    Foreground="{StaticResource DimTextBrush}" FontSize="12"
                                    Text="{Binding TodayPomodoros, StringFormat='🍅 {0}'}"/>
-                        <CheckBox VerticalAlignment="Center" ToolTip="设为当前任务"
-                                  IsChecked="{Binding IsActive}"
+                        <!-- 激活勾选 -->
+                        <CheckBox VerticalAlignment="Center" ToolTip="设为当前任务" Margin="0,0,6,0"
+                                  IsChecked="{Binding IsActive, Mode=OneWay}"
                                   Command="{Binding DataContext.Tasks.ActivateCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                  CommandParameter="{Binding}">
-                          <TextBlock Text="{Binding Title}" Margin="6,0" TextTrimming="CharacterEllipsis"
-                                     Foreground="{StaticResource TextBrush}"/>
-                        </CheckBox>
+                                  CommandParameter="{Binding}"/>
+                        <!-- 标题(非编辑态) -->
+                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" Margin="6,0"
+                                   TextTrimming="CharacterEllipsis" Foreground="{StaticResource TextBrush}">
+                          <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                              <Setter Property="Visibility" Value="Visible"/>
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                  <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </TextBlock.Style>
+                        </TextBlock>
+                        <!-- 标题输入(编辑态,回车保存/Esc 取消) -->
+                        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                 VerticalAlignment="Center" Margin="6,0">
+                          <TextBox.Style>
+                            <Style TargetType="TextBox">
+                              <Setter Property="Visibility" Value="Collapsed"/>
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                  <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </TextBox.Style>
+                          <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding DataContext.Tasks.SaveEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"/>
+                            <KeyBinding Key="Escape" Command="{Binding DataContext.Tasks.CancelEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"/>
+                          </TextBox.InputBindings>
+                        </TextBox>
                       </DockPanel>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>

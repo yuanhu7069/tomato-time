@@ -5,6 +5,7 @@ namespace TomatoTime.Services;
 public interface ITaskService
 {
     Task<TaskEntity> CreateAsync(string title);
+    Task UpdateTitleAsync(int taskId, string newTitle);
     Task ActivateAsync(int taskId); // 旧激活置 false,新激活置 true
     Task CompleteAsync(int taskId); // 填 CompletedAt
     Task DeleteAsync(int taskId);

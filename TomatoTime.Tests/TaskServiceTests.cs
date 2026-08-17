@@ -87,4 +87,35 @@ public class TaskServiceTests
         Assert.Single(pending);
         Assert.Equal(b.Id, pending[0].Id);
     }
+
+    [Fact]
+    public async Task UpdateTitleAsync_ChangesTitle()
+    {
+        var svc = Create();
+        var a = await svc.CreateAsync("旧标题");
+        await svc.UpdateTitleAsync(a.Id, "新标题");
+        var all = await svc.GetAllAsync();
+        Assert.Equal("新标题", all.First(x => x.Id == a.Id).Title);
+    }
+
+    [Fact]
+    public async Task GetTodayPendingAsync_DoesNotIncludeYesterdayTasks()
+    {
+        // 直接在 DbContext 插入一个"昨天创建、未完成"的任务
+        using var db = TestDb.Create();
+        db.Tasks.Add(new TomatoTime.Data.Entities.TaskEntity
+        {
+            Title = "昨天的事",
+            CreatedAt = DateTime.UtcNow.AddDays(-1),
+            Order = 1
+        });
+        await db.SaveChangesAsync();
+
+        var svc = new TaskService(db);
+        var today = await svc.CreateAsync("今天的事");
+
+        var pending = await svc.GetTodayPendingAsync();
+        Assert.Single(pending);
+        Assert.Equal(today.Id, pending[0].Id);
+    }
 }
