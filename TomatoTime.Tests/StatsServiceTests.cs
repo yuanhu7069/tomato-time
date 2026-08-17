@@ -101,4 +101,12 @@ public class StatsServiceTests
         Assert.Equal(24, buckets.Length);
         Assert.Equal(2, buckets[10]);
     }
+
+    [Fact]
+    public void TaskBreakdown_DurationText_FormatsReadable()
+    {
+        Assert.Equal("25m", new TaskBreakdown(null, "任务", 1, 1500).DurationText);
+        Assert.Equal("1h 25m", new TaskBreakdown(null, "任务", 4, 5100).DurationText);
+        Assert.Equal("0m", new TaskBreakdown(null, "任务", 0, 0).DurationText);
+    }
 }

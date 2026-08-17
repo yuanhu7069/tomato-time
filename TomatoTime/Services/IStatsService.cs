@@ -4,7 +4,13 @@ namespace TomatoTime.Services;
 
 public record DayPomodoros(DateTime Date, int Count, int TotalSeconds);
 
-public record TaskBreakdown(int? TaskId, string Title, int Pomodoros, int TotalSeconds);
+public record TaskBreakdown(int? TaskId, string Title, int Pomodoros, int TotalSeconds)
+{
+    /// <summary>专注时长的人类可读文本(如 1h 25m / 25m),供统计表格显示。</summary>
+    public string DurationText => TotalSeconds >= 3600
+        ? $"{TotalSeconds / 3600}h {TotalSeconds % 3600 / 60}m"
+        : $"{TotalSeconds / 60}m";
+}
 
 public interface IStatsService
 {

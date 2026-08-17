@@ -50,7 +50,15 @@
 
         <GroupBox Grid.Row="3" Header="按任务分布" Margin="2,4,2,2"
                   Foreground="{StaticResource CyanBrush}" BorderBrush="{StaticResource ControlBorderBrush}">
-          <DataGrid ItemsSource="{Binding BreakdownRows}" AutoGenerateColumns="True" IsReadOnly="True"/>
+          <DataGrid ItemsSource="{Binding BreakdownRows}" AutoGenerateColumns="False" IsReadOnly="True"
+                    HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False"
+                    RowHeaderWidth="0" SelectionMode="Single" SelectionUnit="FullRow">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="任务" Binding="{Binding Title}" Width="*"/>
+              <DataGridTextColumn Header="番茄数" Binding="{Binding Pomodoros}" Width="70"/>
+              <DataGridTextColumn Header="专注时长" Binding="{Binding DurationText}" Width="90"/>
+            </DataGrid.Columns>
+          </DataGrid>
         </GroupBox>
       </Grid>
     </DataTemplate>
