@@ -54,16 +54,6 @@
                   IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
         </DockPanel>
 
-        <!-- 遮罩不透明度 -->
-        <TextBlock Text="遮罩不透明度" Foreground="{StaticResource TextBrush}" FontSize="13"/>
-        <DockPanel Margin="0,4,0,12">
-          <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource AccentBrush}" FontFamily="Consolas"
-                     FontSize="13" VerticalAlignment="Center" Margin="10,0,0,0"
-                     Text="{Binding OverlayOpacity, StringFormat={}{0:0%}}"/>
-          <Slider Minimum="0.3" Maximum="0.9" Value="{Binding OverlayOpacity}" TickFrequency="0.1"
-                  IsSnapToTickEnabled="True" VerticalAlignment="Center"/>
-        </DockPanel>
-
         <!-- 铃声音量 -->
         <TextBlock Text="铃声音量" Foreground="{StaticResource TextBrush}" FontSize="13"/>
         <DockPanel Margin="0,4,0,12">

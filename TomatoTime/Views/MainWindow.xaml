@@ -42,7 +42,8 @@
         </Border>
 
         <Grid Grid.Row="2" Margin="2,6">
-          <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" TooltipPosition="Hidden"/>
+          <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"
+                              TooltipPosition="Hidden" Background="#0F1626" Padding="4"/>
           <TextBlock Text="今天还没有完成番茄" Foreground="{StaticResource DimTextBrush}"
                      HorizontalAlignment="Center" VerticalAlignment="Center"
                      Visibility="{Binding Series[0].Values.Count, Converter={x:Static vm:EmptyToCollapsedConverter.Instance}, FallbackValue=Collapsed}"/>

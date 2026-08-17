@@ -32,12 +32,27 @@ public partial class StatsViewModel : ObservableObject
         private set => SetProperty(ref _series, value);
     }
 
+    // 深色主题下图表轴外观:白色刻度文字 + 深灰分隔线
+    private static readonly SolidColorPaint WhitePaint = new(SKColors.White);
+    private static readonly SolidColorPaint GridPaint = new(new SKColor(46, 61, 92));
+
     private Axis[] _xAxes = { new() { Labels = Array.Empty<string>() } };
     public Axis[] XAxes
     {
         get => _xAxes;
         private set => SetProperty(ref _xAxes, value);
     }
+
+    /// <summary>数值轴(固定):白色刻度,适配深色图表背景。</summary>
+    public Axis[] YAxes { get; } =
+    {
+        new Axis
+        {
+            LabelsPaint = WhitePaint,
+            SeparatorsPaint = GridPaint,
+            TextSize = 12
+        }
+    };
 
     public ObservableCollection<TaskBreakdown> BreakdownRows { get; } = new();
 
@@ -114,7 +129,10 @@ public partial class StatsViewModel : ObservableObject
             {
                 Labels = Enumerable.Range(0, 24)
                     .Select(h => h % 3 == 0 ? $"{h}:00" : "").ToArray(),
-                LabelsRotation = 0
+                LabelsRotation = 0,
+                LabelsPaint = WhitePaint,
+                SeparatorsPaint = GridPaint,
+                TextSize = 12
             }
         };
         await FillBreakdownAsync(await _svc.GetBreakdownForDayAsync(day));
@@ -142,7 +160,14 @@ public partial class StatsViewModel : ObservableObject
         };
         XAxes = new Axis[]
         {
-            new() { Labels = week.Select(x => $"{x.Date:MM-dd}").ToArray(), LabelsRotation = 30 }
+            new()
+            {
+                Labels = week.Select(x => $"{x.Date:MM-dd}").ToArray(),
+                LabelsRotation = 30,
+                LabelsPaint = WhitePaint,
+                SeparatorsPaint = GridPaint,
+                TextSize = 12
+            }
         };
         await FillBreakdownAsync(await _svc.GetBreakdownForRangeAsync(weekStart, weekStart.AddDays(6)));
     }
@@ -172,7 +197,10 @@ public partial class StatsViewModel : ObservableObject
             new()
             {
                 Labels = days.Select(x => $"{x.Date:dd}").ToArray(),
-                LabelsRotation = 0
+                LabelsRotation = 0,
+                LabelsPaint = WhitePaint,
+                SeparatorsPaint = GridPaint,
+                TextSize = 12
             }
         };
         await FillBreakdownAsync(await _svc.GetBreakdownForRangeAsync(

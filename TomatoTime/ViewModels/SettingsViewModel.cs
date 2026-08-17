@@ -15,7 +15,6 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int shortBreakMinutes;
     [ObservableProperty] private int longBreakMinutes;
     [ObservableProperty] private int longBreakInterval;
-    [ObservableProperty] private double overlayOpacity;
     [ObservableProperty] private bool startWithWindows;
     [ObservableProperty] private bool restoreOnStartup;
     [ObservableProperty] private int bellVolume;
@@ -28,7 +27,6 @@ public partial class SettingsViewModel : ObservableObject
         ShortBreakMinutes = settingsService.ShortBreakMinutes;
         LongBreakMinutes = settingsService.LongBreakMinutes;
         LongBreakInterval = settingsService.LongBreakInterval;
-        OverlayOpacity = settingsService.OverlayOpacity;
         StartWithWindows = settingsService.StartWithWindows;
         RestoreOnStartup = settingsService.RestoreOnStartup;
         BellVolume = settingsService.BellVolume;
@@ -44,7 +42,6 @@ public partial class SettingsViewModel : ObservableObject
             ShortBreakMinutes = ShortBreakMinutes,
             LongBreakMinutes = LongBreakMinutes,
             LongBreakInterval = LongBreakInterval,
-            OverlayOpacity = OverlayOpacity,
             RestoreOnStartup = RestoreOnStartup,
             StartWithWindows = StartWithWindows,
             BellVolume = BellVolume
