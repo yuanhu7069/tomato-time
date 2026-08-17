@@ -1,7 +1,5 @@
-using System.Windows;
 using System.Windows.Media;
-using H.NotifyIcon;
-using Microsoft.Extensions.DependencyInjection;
+using TomatoTime.Services;
 
 namespace TomatoTime.Services;
 
@@ -13,7 +11,6 @@ public class NotificationService : INotificationService, IDisposable
 {
     private readonly ISettingsService _settings;
     private MediaPlayer? _mp;
-    private TaskbarIcon? _tray;
 
     public NotificationService(ISettingsService settings)
     {
@@ -24,8 +21,8 @@ public class NotificationService : INotificationService, IDisposable
     {
         try
         {
-            _tray ??= Application.Current?.TryFindResource("TrayIcon") as TaskbarIcon;
-            _tray?.ShowNotification(title, body);
+            var tray = TomatoTime.App.TrayIcon;
+            tray?.ShowNotification(title, body);
         }
         catch
         {

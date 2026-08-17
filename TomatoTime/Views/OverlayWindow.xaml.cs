@@ -15,6 +15,8 @@ public partial class OverlayWindow : Window
         Top = wa.Top;
         Width = wa.Width;
         Height = wa.Height;
-        Opacity = App.Services.GetRequiredService<ISettingsService>().OverlayOpacity;
+        Opacity = TomatoTime.App.Services is { } sp
+            ? sp.GetRequiredService<ISettingsService>().OverlayOpacity
+            : 0.7;
     }
 }
