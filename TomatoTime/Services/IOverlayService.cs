@@ -4,5 +4,5 @@ namespace TomatoTime.Services;
 public interface IOverlayService
 {
     void OnStartNext();
-    void OnPostpone();
+    void OnPostpone(int minutes);
 }

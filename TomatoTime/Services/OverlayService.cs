@@ -66,10 +66,10 @@ public class OverlayService : IOverlayService
         _timer.StartNext();
     }
 
-    public void OnPostpone()
+    public void OnPostpone(int minutes)
     {
         StopBellAndClose();
-        _timer.Postpone();
+        _timer.Postpone(minutes * 60);
     }
 
     private void StopBellAndClose()

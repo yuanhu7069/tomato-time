@@ -37,5 +37,7 @@ public partial class OverlayViewModel : ObservableObject
     }
 
     [RelayCommand] private void StartNext() => _overlay.OnStartNext();
-    [RelayCommand] private void Postpone() => _overlay.OnPostpone();
+
+    /// <summary>稍后延时若干分钟(参数由按钮 CommandParameter 提供 5/10/20)。</summary>
+    [RelayCommand] private void Postpone(int minutes) => _overlay.OnPostpone(minutes);
 }

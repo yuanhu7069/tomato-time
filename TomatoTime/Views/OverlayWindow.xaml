@@ -18,11 +18,17 @@
                    HorizontalAlignment="Center"/>
         <TextBlock Text="{Binding NextLabel}" Foreground="#00E5FF" FontSize="22" FontWeight="SemiBold"
                    Margin="0,2,0,28" HorizontalAlignment="Center"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-          <Button Content="开始下一段" Command="{Binding StartNextCommand}" Padding="30,13" Margin="10"
-                  FontSize="16" Style="{StaticResource AccentButton}"/>
-          <Button Content="稍后 1 分" Command="{Binding PostponeCommand}" Padding="30,13" Margin="10"
-                  FontSize="16" Style="{StaticResource GhostButton}"/>
+        <StackPanel HorizontalAlignment="Center">
+          <Button Content="开始下一段" Command="{Binding StartNextCommand}" Padding="34,13" Margin="10"
+                  FontSize="16" Style="{StaticResource AccentButton}" Width="200"/>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,12,0,0">
+            <Button Content="稍后 5 分" Command="{Binding PostponeCommand}" CommandParameter="5"
+                    Padding="16,10" Margin="6" FontSize="14" Style="{StaticResource GhostButton}"/>
+            <Button Content="稍后 10 分" Command="{Binding PostponeCommand}" CommandParameter="10"
+                    Padding="16,10" Margin="6" FontSize="14" Style="{StaticResource GhostButton}"/>
+            <Button Content="稍后 20 分" Command="{Binding PostponeCommand}" CommandParameter="20"
+                    Padding="16,10" Margin="6" FontSize="14" Style="{StaticResource GhostButton}"/>
+          </StackPanel>
         </StackPanel>
       </StackPanel>
     </Border>
