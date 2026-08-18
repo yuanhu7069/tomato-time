@@ -72,6 +72,13 @@ public class OverlayService : IOverlayService
         _timer.Postpone(minutes * 60);
     }
 
+    /// <summary>停止番茄计时:关遮罩、回 Idle、清零。</summary>
+    public void OnStop()
+    {
+        StopBellAndClose();
+        _timer.Stop();
+    }
+
     private void StopBellAndClose()
     {
         if (_bellStarted)

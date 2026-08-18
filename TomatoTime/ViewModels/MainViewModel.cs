@@ -81,11 +81,12 @@ public partial class MainViewModel : ObservableObject
         _ => "长休"
     };
 
-    [RelayCommand] private void Start() => _timer.Start();
-    [RelayCommand] private void Pause() => _timer.Pause();
-    [RelayCommand] private void Resume() => _timer.Resume();
-    [RelayCommand] private void Skip() => _timer.Skip();
-    [RelayCommand] private void Stop() => _timer.Stop();
+    // 控制命令执行后立即刷新界面(否则停止后 Idle 不再触发 Tick,显示会卡住)
+    [RelayCommand] private void Start() { _timer.Start(); RefreshDisplay(); }
+    [RelayCommand] private void Pause() { _timer.Pause(); RefreshDisplay(); }
+    [RelayCommand] private void Resume() { _timer.Resume(); RefreshDisplay(); }
+    [RelayCommand] private void Skip() { _timer.Skip(); RefreshDisplay(); }
+    [RelayCommand] private void Stop() { _timer.Stop(); RefreshDisplay(); }
 
     [RelayCommand]
     private void OpenSettings() => App.Services.GetRequiredService<IWindowService>().ShowSettings();

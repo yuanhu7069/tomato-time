@@ -19,8 +19,12 @@
         <TextBlock Text="{Binding NextLabel}" Foreground="#00E5FF" FontSize="22" FontWeight="SemiBold"
                    Margin="0,2,0,28" HorizontalAlignment="Center"/>
         <StackPanel HorizontalAlignment="Center">
-          <Button Content="开始下一段" Command="{Binding StartNextCommand}" Padding="34,13" Margin="10"
-                  FontSize="16" Style="{StaticResource AccentButton}" Width="200"/>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="开始下一段" Command="{Binding StartNextCommand}" Padding="26,13" Margin="6"
+                    FontSize="16" Style="{StaticResource AccentButton}" MinWidth="170"/>
+            <Button Content="停止计时" Command="{Binding StopCommand}" Padding="20,13" Margin="6"
+                    FontSize="15" Foreground="#FF7A88" Style="{StaticResource GhostButton}" MinWidth="120"/>
+          </StackPanel>
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,12,0,0">
             <Button Content="稍后 5 分" Command="{Binding Postpone5Command}"
                     Padding="16,10" Margin="6" FontSize="14" Style="{StaticResource GhostButton}"/>

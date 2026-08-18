@@ -37,6 +37,7 @@ public partial class OverlayViewModel : ObservableObject
     }
 
     [RelayCommand] private void StartNext() => _overlay.OnStartNext();
+    [RelayCommand] private void Stop() => _overlay.OnStop();
 
     // 稍后延时三档(无参命令,避免 CommandParameter 类型转换问题)
     [RelayCommand] private void Postpone5() => _overlay.OnPostpone(5);

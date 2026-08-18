@@ -5,4 +5,5 @@ public interface IOverlayService
 {
     void OnStartNext();
     void OnPostpone(int minutes);
+    void OnStop();
 }
