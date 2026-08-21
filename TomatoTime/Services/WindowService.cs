@@ -37,6 +37,13 @@ public class WindowService : IWindowService
                 Application.Current.Dispatcher)
         };
         _main.Show();
+        if (_main.WindowState == WindowState.Minimized)
+            _main.WindowState = WindowState.Normal;
+        _main.Activate();
+        _main.Focus();
+        // 强制前置:从悬浮窗/托盘唤回时仅 Activate 有时无效(窗口只在任务栏出现)
+        _main.Topmost = true;
+        _main.Topmost = false;
         _main.Activate();
     }
 
