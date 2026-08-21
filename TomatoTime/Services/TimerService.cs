@@ -111,14 +111,18 @@ public class TimerService : ITimerService
         }
     }
 
+    /// <summary>
+    /// 恢复上次保存的状态。进行中的段(工作/休息/暂停)一律不回退继续 —— 从中断点恢复已有剩余时间,
+    /// 会话重启后从 0(Idle) 开始;仅保留已完成番茄数与激活任务。
+    /// </summary>
     public void RestoreFrom(TimerState saved)
     {
-        State.Phase = saved.Phase;
-        State.Status = saved.Status;
-        State.RemainingSeconds = saved.RemainingSeconds;
+        State.Phase = PhaseKind.Work;
+        State.Status = TimerStatus.Idle;
+        State.RemainingSeconds = 0;
         State.CompletedPomodoros = saved.CompletedPomodoros;
         State.ActiveTaskId = saved.ActiveTaskId;
-        if (State.Status is TimerStatus.Working or TimerStatus.Break) StartTimer();
+        State.PhaseStartedAt = null;
     }
 
     // ---------- 内部 ----------

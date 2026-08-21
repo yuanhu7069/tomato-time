@@ -53,6 +53,21 @@ public partial class App : Application
         if (persist.Load() is { } loaded)
             timer.RestoreFrom(loaded);
 
+        // 崩溃保护:每次段完成(PhaseEnded)就把当前状态写入 state.json,
+        // 即使之后被强制退出/崩溃,最多丢失"最后一个进行中的段"。
+        timer.PhaseEnded += (_, _) => Dispatcher.BeginInvoke(() =>
+        {
+            try
+            {
+                var floating = Services.GetRequiredService<IFloatingService>();
+                persist.Save(timer.State, floating.Left, floating.Top);
+            }
+            catch
+            {
+                // 状态写入失败不影响计时流程
+            }
+        });
+
         var win = Services.GetRequiredService<IWindowService>();
         win.ShowMain();
         win.ShowFloating();

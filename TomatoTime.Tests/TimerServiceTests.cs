@@ -185,7 +185,7 @@ public class TimerServiceTests
     }
 
     [Fact]
-    public void RestoreFrom_RestoresFields_AndResumesRunningPhase()
+    public void RestoreFrom_DoesNotContinueInterruptedPhase_StartsIdle()
     {
         var t = Create();
         var saved = new TimerState
@@ -197,11 +197,31 @@ public class TimerServiceTests
             ActiveTaskId = 7
         };
         t.RestoreFrom(saved);
+        // 中断的段不恢复剩余时间:一律从 0(Idle) 开始,仅保留番茄数与激活任务
         Assert.Equal(PhaseKind.Work, t.State.Phase);
-        Assert.Equal(TimerStatus.Paused, t.State.Status);
-        Assert.Equal(600, t.State.RemainingSeconds);
+        Assert.Equal(TimerStatus.Idle, t.State.Status);
+        Assert.Equal(0, t.State.RemainingSeconds);
         Assert.Equal(2, t.State.CompletedPomodoros);
         Assert.Equal(7, t.State.ActiveTaskId);
+        Assert.Null(t.State.PhaseStartedAt);
+    }
+
+    [Fact]
+    public void RestoreFrom_WhenSavedIdle_StaysIdle()
+    {
+        var t = Create();
+        var saved = new TimerState
+        {
+            Phase = PhaseKind.ShortBreak,
+            Status = TimerStatus.Idle,
+            RemainingSeconds = 0,
+            CompletedPomodoros = 5,
+            ActiveTaskId = null
+        };
+        t.RestoreFrom(saved);
+        Assert.Equal(TimerStatus.Idle, t.State.Status);
+        Assert.Equal(0, t.State.RemainingSeconds);
+        Assert.Equal(5, t.State.CompletedPomodoros);
     }
 
     [Fact]
