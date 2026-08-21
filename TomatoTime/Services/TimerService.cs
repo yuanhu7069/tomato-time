@@ -86,11 +86,12 @@ public class TimerService : ITimerService
         State.PhaseStartedAt = null;
     }
 
-    /// <summary>稍后延迟:期到再次弹遮罩 + 响铃(不重发 Toast)。</summary>
+    /// <summary>稍后延迟:期到再次弹遮罩 + 响铃(不重发 Toast)。稍后期间把剩余秒同步到 State 并触发 Tick,供悬浮窗/主窗显示倒计时。</summary>
     public void Postpone(int seconds = 60)
     {
         if (State.Status != TimerStatus.Waiting) return;
         _postponeRemaining = seconds;
+        State.RemainingSeconds = seconds;
         _ticker?.Dispose();
         _ticker = new Timer(_ => PostponeTickOnce(), null, 1000, 1000);
     }
@@ -99,9 +100,12 @@ public class TimerService : ITimerService
     internal void PostponeTickOnce()
     {
         _postponeRemaining--;
+        State.RemainingSeconds = _postponeRemaining;
+        Tick?.Invoke(this, EventArgs.Empty);
         if (_postponeRemaining <= 0)
         {
             _ticker?.Dispose();
+            State.RemainingSeconds = 0;
             // 不带 PhaseStartedAt → 订阅方不会重复写 WorkSession 流水
             PhaseEnded?.Invoke(this, new PhaseEventArgs { Phase = State.Phase, RemainingSeconds = 0 });
         }

@@ -163,6 +163,28 @@ public class TimerServiceTests
     }
 
     [Fact]
+    public void Postpone_UpdatesRemainingAndRaisesTick()
+    {
+        var t = Create();
+        t.Start();
+        t.State.Status = TimerStatus.Waiting;
+        var ticks = 0;
+        t.Tick += (_, _) => ticks++;
+
+        t.Postpone(3);
+        Assert.Equal(3, t.State.RemainingSeconds); // 稍后秒数同步到 State
+
+        t.PostponeTickOnce();
+        Assert.Equal(2, t.State.RemainingSeconds);
+        Assert.Equal(1, ticks); // 每次稍后 Tick 触发 UI 刷新(悬浮窗倒计时更新)
+
+        t.PostponeTickOnce();
+        t.PostponeTickOnce();
+        Assert.Equal(0, t.State.RemainingSeconds);
+        Assert.Equal(3, ticks);
+    }
+
+    [Fact]
     public void RestoreFrom_RestoresFields_AndResumesRunningPhase()
     {
         var t = Create();
